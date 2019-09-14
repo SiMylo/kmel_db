@@ -3,3 +3,6 @@ xxd.kenwood.dap*
 *.pyc
 test_coverage
 .coverage
+*.memo
+*.xml
+*.dap
