@@ -398,14 +398,18 @@ class KenwoodDatabase(object):
         '''
         Sort by performer, then album, then title
         '''
+        self.performer_title_order_table_length = 0
         for piEntry in self.performerIndex:
             for album in piEntry.album_numbers:
                 for title in self.albumIndex[album].title_numbers:
                     if self.mainIndex[title].performer_number == piEntry.number and \
                             self.mainIndex[title].album_number == album:
                         self.db_file.write(struct.pack("<H", self.mainIndex[title].index))
+                        self.performer_title_order_table_length += 1
             #for mf in piEntry.titles:
             #    self.db_file.write(struct.pack("<H", mf.get_index()))
+        if self.performer_title_order_table_length != len(self.mainIndex):
+            print("WARNING: Performer Title Order Table length != Main Index length")
 
     # ALBUM
 
@@ -490,6 +494,7 @@ class KenwoodDatabase(object):
         for pliEntry in self.playlistIndex:
             pliEntry.name_offset = (
                 self.db_file.tell() - start_of_names)
+
             self.db_file.write(pliEntry.encodedName)
 
     def write_playlist_title_table(self):
@@ -498,7 +503,9 @@ class KenwoodDatabase(object):
         for pliEntry in self.playlistIndex:
             pliEntry.title_entry_offset = (
                 self.db_file.tell() - start_of_titles)
+            print("Writing playlist: {}".format(pliEntry))
             for mf in pliEntry.titles:
+                print("\tTitle: {} -- {}".format(mf.index,mf.title))
                 self.db_file.write(struct.pack("<H", mf.index))
 
     # Was table 9
@@ -1053,6 +1060,7 @@ class KenwoodDatabase(object):
 
             miEntry = MainIndexEntry()
             miEntry.set_media_file(mf)
+            # print("Adding entry {} from file {} - {}".format(miEntry.index,mf.index,mf.title))
             self.mainIndex.append(miEntry)
 
         # Create the Genre Index, alphabetically sorted on name

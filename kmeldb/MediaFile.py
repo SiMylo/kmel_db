@@ -33,8 +33,6 @@ class MediaFile(object):
             performer (str): The performer of the work
             album (str): The album on which the work appears
             genre (str): The genre for the work
-            tracknumber (int): The track number for the work
-            discnumber (int): The disc number for the work
         """
         self._index = index
         self._fullname = fullname
@@ -104,42 +102,34 @@ class MediaFile(object):
 
     @property
     def performer(self):
-        ''''''
         return self._performer
 
     @property
     def performer_number(self):
-        ''''''
         return self._performer_number
 
     @performer_number.setter
     def performer_number(self, performer_number):
-        ''''''
         self._performer_number = performer_number
 
     @property
     def album(self):
-        ''''''
         return self._album
 
     @property
     def album_number(self):
-        ''''''
         return self._album_number
 
     @album_number.setter
     def album_number(self, album_number):
-        ''''''
         self._album_number = album_number
 
     @property
     def genre(self):
-        ''''''
         return self._genre
 
     @property
     def genre_number(self):
-        ''''''
         return self._genre_number
 
     @genre_number.setter
@@ -148,16 +138,14 @@ class MediaFile(object):
 
     @property
     def tracknumber(self):
-        ''''''
         return self._tracknumber
 
     @property
     def discnumber(self):
-        ''''''
         return self._discnumber
 
     def __repr__(self):
-        return "\nMediaFile({},\n\t{},\n\t{},\n\t{},\n\t{},\n\t{},\n\t{},\n\t{},\n\t{},\n\t{},\n\t{})\n".format(
+        return "\nMediaFile({},\n\t{},\n\t{},\n\t{},\n\t{},\n\t{},\n\t{},\n\t{},\n\t{})\n".format(
             self._index,
             self._shortdir,
             self._shortfile,
@@ -166,25 +154,13 @@ class MediaFile(object):
             self._title,
             self._performer,
             self._album,
-            self._genre,
-            self._tracknumber,
-            self._discnumber)
+            self._genre)
 
     def __str__(self):
         """
         Return a string formatted with the media file information.
         """
-        return """
-  LongDir: {}
-  ShortDir: {}
-  LongFile: {}
-  ShortFile: {}
-  Title: {}
-  Perfomer: {}
-  Album: {}
-  Genre: {}
-  Track: {}
-  Disc: {}""".format(
+        return "\n\tLongDir: {}\n\tShortDir: {}\n\tLongFile: {}\n\tShortFile: {}\n\tTitle: {}\n\tPerfomer: {}\n\tAlbum: {}\n\tGenre: {}".format(
             self._longdir,
             self._shortdir,
             self._longfile,
@@ -192,6 +168,4 @@ class MediaFile(object):
             self._title,
             self._performer,
             self._album,
-            self._genre,
-            self._tracknumber,
-            self._discnumber)
+            self._genre)
