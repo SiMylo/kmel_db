@@ -33,6 +33,48 @@ Current limitations:
 * processes pls playlists only at this stage
 * international characters are sorted out of order, so "Bäpa" comes after "By The Hand Of My Father" rather than after "Banks of Newfoundland"
 
+### renames.json
+If you include a renames.json file, the tags for titles can be adjusted
+for the Kenwood database.  This is useful if you want to store the full
+titles in your library but your device is unable to display the entire
+tag length.  Be aware that this can significantly increase runtime.
+
+The file consists of a list of "transforms" which allows you to capture
+parts of the original title (or the special tag ${Performer}) and use them
+for the final title; and "substitutions" which allows you to take a regex
+and replace it with a static value.  Note that because of the JSON spec, you'll have to escape your `\`.
+
+Each of these items is performed in the order specified. 
+
+For an example, suppose you had some symphonies in your library, and the
+full name of the track looked something like this:
+`Symphony No. 9 -iv. Presto; Allegro assai, Choral Finale on Schiller's 'Ode To Joy'`
+which exceeds tag length limitations for the device.  You could shorten it
+to something like
+`Sy#9-4(LvB) Presto; Allegro assai (Ode To Joy)`
+The renames.json file would include at least the following
+```json
+{
+    "transforms": [
+        ["Symphony No\\. ?(\\d+)[, -]*([iv]+\\.) (.*)", "Sy#$1-$2(${Performer})$3"],
+    ],
+    "substitutions": [
+		[", Choral Finale on Schiller's 'Ode To Joy'", "(Ode To Joy)"],
+		["Ludwig van Beethoven", "LvB"],
+		["-iv\\.", "-4"],
+    ]
+}
+```
+and would do the following steps:
+`Symphony No. 9 -iv. Presto; Allegro assai, Choral Finale on Schiller's 'Ode To Joy'`
+-> `Sy#9-iv.(Ludwig van Beethoven) Presto; Allegro assai, Choral Finale on Schiller's 'Ode To Joy'`
+-> `Sy#9-iv.(Ludwig van Beethoven) Presto; Allegro assai (Ode To Joy)`
+-> `Sy#9-iv.(LvB) Presto; Allegro assai (Ode To Joy)`
+-> `Sy#9-4(LvB) Presto; Allegro assai (Ode To Joy)`
+
+Of course you could do this all in one substitution if you wanted to avoid
+regex altogether.
+
 ## Parser
 To parse a database, just type:
 
