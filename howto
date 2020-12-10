@@ -1,0 +1,8 @@
+cd ../../Plain\ White\ T\'s/Big\ Bad\ World/
+for f in ./*.mp3; do eyeD3 --add-image=/home/dlarsen/Downloads/tees.jpg:FRONT_COVER "${f#./}"; done
+
+rsync -av --modify-window=1 --delete /media/dlarsen/KINGSTON/ /home/dlarsen/Backups/LastMusic/ > backup\ rsync.memo
+./CheckLibrary.py -c database_config.xml -d /home/dlarsen/Music/ -s -v > Last\ Library\ Check.memo
+rsync -av --modify-window=1 --delete /home/dlarsen/Music/ /media/dlarsen/KINGSTON/ > Last\ rsync.memo
+./GenDatabase.py -c database_config.xml -d /media/dlarsen/KINGSTON/
+./KenwoodDBReader.py -i /media/dlarsen/KINGSTON/kenwood.dap/kenwood.dap > Last\ Database\ Contents.memo
