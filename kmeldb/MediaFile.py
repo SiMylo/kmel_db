@@ -1,3 +1,7 @@
+import json
+import re
+import os
+
 valid_media_files = ('mp3', 'wma')
 
 
@@ -44,6 +48,26 @@ class MediaFile(object):
         self._shortfile = shortfile + "\x00"
         self._longdir = longdir + "\x00"
         self._longfile = longfile + "\x00"
+
+        # For titles, if there's a rename.json, use it to affect names put
+        # in tags.
+        if os.path.isfile('renames.json'):
+            with open('renames.json') as renames:
+                full_renames = json.load(renames)
+                for transform in full_renames['transforms']:
+                    matches = re.search(transform[0].replace('\\\\','\\'),title)
+                    if matches:
+                        replacement = transform[1]
+                        for substitution in re.findall('\$({[^{}]+}|\d+)',replacement):
+                            if r"{Performer}" in substitution:
+                                replacement = replacement.replace("$"+substitution, performer)
+                            else:
+                                sub = int(substitution) if substitution.isdigit() else substitution
+                                replacement = replacement.replace("${}".format(sub), matches.group(sub))
+                        title = replacement
+                for substitution in full_renames['substitutions']:
+                    if re.search(substitution[0], title):
+                        title = re.sub(substitution[0], substitution[1], title)
         self._title = title + "\x00"
 
         # The terminating 00 is added by each of the corresponding classes
